@@ -1,26 +1,32 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user'])) {
-    header("Location: dashboard.php");
-    exit;
-}
+// Verificar si el formulario ha sido enviado
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $usuario = $_POST['usuario'];
+    $password = $_POST['password'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nom = $_POST['nom'];
-    $contrasenya = $_POST['contrasenya'];
+    // Comprobar si el archivo de usuarios existe
+    if (file_exists('../usuaris/usuaris.txt')) {
+        // Leer el archivo y obtener las líneas
+        $usuarios = file('../usuaris/usuaris.txt', FILE_IGNORE_NEW_LINES);
 
-    $usuaris = json_decode(file_get_contents('usuaris/usuaris.json'), true);
+        // Verificar usuario y contraseña
+        foreach ($usuarios as $linea) {
+            list($nombre, $correo, $pass, $tipo) = explode(';', $linea);
 
-    foreach ($usuaris as $usuari) {
-        if ($usuari['nom'] == $nom && $usuari['contrasenya'] == $contrasenya) {
-            $_SESSION['user'] = $usuari;
-            header("Location: dashboard.php");
-            exit;
+            // Comprobamos si el nombre de usuario y la contraseña coinciden
+            if ($nombre == $usuario && password_verify($password, $pass)) {
+                $_SESSION['usuario'] = $nombre;
+                $_SESSION['tipo'] = $tipo;
+                header('Location: index.php');
+                exit;
+            }
         }
     }
 
-    $error = "Nom d'usuari o contrasenya incorrecte";
+    // Si no se encuentra el usuario o la contraseña es incorrecta
+    $error = "Usuario o contraseña incorrectos.";
 }
 ?>
 
@@ -29,23 +35,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div class="form-login">
-        <form method="POST" action="">
-            <h1>LOGIN</h1>
-            <div class="caja-input">
-                <input type="text" name="nom" placeholder="Nom d'usuari" required>
-                <img src="./img/usuario.png" alt="Usuari">
-            </div>
-            <div class="caja-input">
-                <input type="password" name="contrasenya" placeholder="Contrasenya" required>
-                <img src="./img/cerradura.png" alt="Contrasenya">
-            </div>
-            <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
-            <button type="submit" class="btn">Accedir</button>
-        </form>
-    </div>
+    <!-- Formulario de login -->
+<form method="POST">
+    <label for="usuario">Usuario:</label>
+    <input type="text" name="usuario" required><br><br>
+    
+    <label for="password">Contraseña:</label>
+    <input type="password" name="password" id="password" required><br><br>
+
+    <button type="submit">Iniciar sesión</button>
+</form>
+
+<!-- Mostrar mensaje de error en caso de fallo -->
+<?php if (isset($error)) { echo '<p style="color:red;">' . $error . '</p>'; } ?>
 </body>
 </html>
