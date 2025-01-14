@@ -1,0 +1,4 @@
+admin;admin@fjeclot.net;$2y$10$IfjwXY5qZ3//OERaSLfbQuxOHm7yEG.mV2JXQo6RPebecq7tGZpVi;admin
+gestor1;gestor1@botiga.com;$2y$10$0wuVyTx1hxkm2supINu5fOhtlVQiXx1SxHTCmi6DVHjwNggbzCUV.;gestor
+cliente1;cliente1@botiga.com;$2y$10$G3tCMlLtRB6r4ejaE0AVuuDsziKDJumXHy43B07/cfFGgcztNl5Ou;cliente
+David;davidli@botiga.com;$2y$10$7PIbqAsSYFvRo/6J5gFm9uXcwHnT9MGIy1xjWnJB1G1viQ1bIYHu2;cliente;
