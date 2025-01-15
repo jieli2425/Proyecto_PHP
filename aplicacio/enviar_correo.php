@@ -1,39 +1,64 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+session_start(); // Asegúrate de que la sesión está iniciada
+
 if ($_SESSION['tipo'] != 'cliente') {
     header('Location: login.php');
     exit;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require '../vendor/autoload.php'; // Ajusta la ruta a autoload.php
+
+    // Verificar si las claves 'mensaje' y 'solicitud' existen en $_POST
     $asunto = "";
-    $mensaje = $_POST['mensaje'];
-    
-    // Comprovem si és una petició de modificació o esborrament de compte
-    if ($_POST['solicitud'] == 'modificar') {
-        $asunto = "petició de modificació/esborrament del compte de client";
-    } elseif ($_POST['solicitud'] == 'esborrar') {
-        $asunto = "petició de modificació/esborrament del compte de client";
-    }
-    
-    // Si és una justificació de comanda rebutjada
-    if ($_POST['solicitud'] == 'justificar_comanda') {
-        $asunto = "petició de justificació de comanda rebutjada";
+    $mensaje = isset($_POST['mensaje']) ? $_POST['mensaje'] : '';
+    $solicitud = isset($_POST['solicitud']) ? $_POST['solicitud'] : '';
+
+    // Determinar el asunto según la solicitud
+    if ($solicitud == 'modificar') {
+        $asunto = "Petició de modificació del compte de client";
+    } elseif ($solicitud == 'esborrar') {
+        $asunto = "Petició d'esborrament del compte de client";
+    } elseif ($solicitud == 'justificar_comanda') {
+        $asunto = "Petició de justificació de comanda rebutjada";
     }
 
-    // Enviament de l'email
-    $to = "gestor1@botiga.com";  // El correu del gestor de la botiga
-    $headers = "From: ".$_SESSION['usuario']."@domini.com" . "\r\n" .
-               "Reply-To: ".$_SESSION['usuario']."@domini.com" . "\r\n" .
-               "Content-Type: text/plain; charset=UTF-8\r\n";
+    // Configuración de PHPMailer
+    $mail = new PHPMailer(true);
 
-    if (mail($to, $asunto, $mensaje, $headers)) {
+    try {
+        // Configuración del servidor SMTP de Gmail
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = '448255.clot@fje.edu'; // Tu correo de Gmail
+        $mail->Password = '5d833d99'; // Tu contraseña de Gmail o clave de aplicación
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        // Configuración del correo
+        $mail->setFrom('joan2005garcia@gmail.com', 'Joan'); // Remitente
+        $mail->addAddress('gestor1@botiga.com', 'Gestor de la Botiga'); // Destinatario
+        $mail->addReplyTo($_SESSION['usuario'] . '@domini.com', 'Cliente'); // Email del cliente
+
+        // Contenido del correo
+        $mail->isHTML(false); // Configurar como texto plano
+        $mail->Subject = $asunto;
+        $mail->Body = $mensaje;
+
+        // Enviar el correo
+        $mail->send();
         echo "La teva sol·licitud ha estat enviada correctament.";
-    } else {
-        echo "Hi ha hagut un error en l'enviament del correu.";
+    } catch (Exception $e) {
+        echo "Hi ha hagut un error en l'enviament del correu. Error: {$mail->ErrorInfo}";
     }
 }
 ?>
 
+<!-- Formularios -->
 <form method="POST" action="enviar_correo.php">
     <label for="mensaje">Explica el motiu per què vols la justificació:</label><br>
     <textarea name="mensaje" id="mensaje" rows="4" cols="50" required></textarea><br>
