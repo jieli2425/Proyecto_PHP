@@ -290,6 +290,9 @@ foreach ($clients as $cliente) {
     <button type="submit">Esborrar</button>
 </form>
 
+<form method="GET" action="generarPDF.php">
+    <button type=submit name="tipo" value="gestor">Gestores PDF</button>
+</form>
 <!-- Formulari per crear un client -->
 <h3>Crear nou client</h3>
 <form method="POST">
@@ -357,6 +360,10 @@ foreach ($clients as $cliente) {
         } ?>
     </select><br>
     <button type="submit">Esborrar</button>
+</form>
+
+<form method="GET" action="generarPDF.php">
+    <button type=submit name="tipo" value="cliente">Clientes PDF</button>
 </form>
 
 <form method="POST" action="index.php">
