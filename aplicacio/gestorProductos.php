@@ -72,6 +72,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
             list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto);
             return $id != $_POST['id'];
         });
+    }elseif ($_POST['accion'] == 'editar') {
+        // editar productos
+        $productos = file($archivoProductos, FILE_IGNORE_NEW_LINES);
+        foreach ($_POST['productos'] as $id => $productoData) {
+            $productos = array_map(function ($producto) use ($id, $productoData) {
+                list($nombre, $idProducto, $precio, $iva, $disponible) = explode('|', $producto);
+                if ($idProducto == $id) {
+                    return "{$productoData['nombre']}|$idProducto|{$productoData['precio']}|{$productoData['iva']}|{$productoData['disponible']}";
+                }
+                return $producto;
+            }, $productos);
+        }
+        file_put_contents($archivoProductos, implode("\n", $productos) . "\n");
+        $mensaje = "Productos actualizados correctamente.";
     }
 
     header('Location: ' . $_SERVER['PHP_SELF']);
@@ -118,6 +132,7 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
 </form>
 
 <h2>Lista de productos</h2>
+<form method="POST">
 <table border="1">
     <thead>
         <tr>
@@ -132,16 +147,26 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
         <?php foreach ($productos as $producto): ?>
             <?php list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto); ?>
             <tr>
-                <td><?php echo htmlspecialchars($nombre); ?></td>
-                <td><?php echo htmlspecialchars($id); ?></td>
-                <td><?php echo htmlspecialchars($precio); ?> €</td>
-                <td><?php echo htmlspecialchars($iva); ?>%</td>
-                <td><?php echo htmlspecialchars($disponible); ?></td>
+                <td><input type="text" name="productos[<?php echo $id; ?>][nombre]" value="<?php echo htmlspecialchars($nombre); ?>" required></td>
+                <td><input type="hidden" name="productos[<?php echo $id; ?>][id]" value="<?php echo htmlspecialchars($id); ?>"><?php echo htmlspecialchars($id); ?></td>
+                <td><input type="number" name="productos[<?php echo $id; ?>][precio]" step="0.01" value="<?php echo htmlspecialchars($precio); ?>" required></td>
+                <td><input type="number" name="productos[<?php echo $id; ?>][iva]" step="0.01" value="<?php echo htmlspecialchars($iva); ?>" required></td>
+                <td>
+                    <select name="productos[<?php echo $id; ?>][disponible]">
+                        <option value="Sí" <?php echo $disponible == 'Sí' ? 'selected' : ''; ?>>Sí</option>
+                        <option value="No" <?php echo $disponible == 'No' ? 'selected' : ''; ?>>No</option>
+                    </select>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 <br>
+<input type="hidden" name="accion" value="editar">
+<button type="submit">Modificar</button>
+</form>
+
+<br><br>
 
 <form method="POST" action="./codigosPDF/generarProductosPDF.php">
     <button type="submit" name="listaProductos">Productos PDF</button>
