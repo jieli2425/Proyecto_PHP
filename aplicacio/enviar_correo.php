@@ -34,13 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = '448255.clot@fje.edu'; // Tu correo de Gmail
+        $mail->Username = 'joan2005garcia@gmail.com'; // Tu correo de Gmail
         $mail->Password = '5d833d99'; // Tu contraseña de Gmail o clave de aplicación
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
         // Configuración del correo
-        $mail->setFrom('joan2005garcia@gmail.com', 'Joan'); // Remitente
+        $mail->setFrom('cliente1@botiga.com', 'Joan'); // Remitente
         $mail->addAddress('gestor1@botiga.com', 'Gestor de la Botiga'); // Destinatario
         $mail->addReplyTo($_SESSION['usuario'] . '@domini.com', 'Cliente'); // Email del cliente
 
