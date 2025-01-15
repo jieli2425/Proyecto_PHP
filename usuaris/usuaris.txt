@@ -1,4 +1,7 @@
-admin;admin@fjeclot.net;$2y$10$IfjwXY5qZ3//OERaSLfbQuxOHm7yEG.mV2JXQo6RPebecq7tGZpVi;admin
-gestor1;gestor1@botiga.com;$2y$10$0wuVyTx1hxkm2supINu5fOhtlVQiXx1SxHTCmi6DVHjwNggbzCUV.;gestor
-cliente1;cliente1@botiga.com;$2y$10$G3tCMlLtRB6r4ejaE0AVuuDsziKDJumXHy43B07/cfFGgcztNl5Ou;cliente
-David;davidli@botiga.com;$2y$10$7PIbqAsSYFvRo/6J5gFm9uXcwHnT9MGIy1xjWnJB1G1viQ1bIYHu2;cliente;
+David;admin@fjeclot.net;$2y$10$RLRHBGxsgx.qNGA.hwSlHuQpo3ydAo.vvw0SNsu2PsiuLO6Mv.Feq;admin
+gestor1;1;$2y$10$wI8e/.qVSoCFbWncNMlu9.O17xJxYIMXYr97cxBGHwnI7zpuLfSyu;gestor;David;Li;gestor1@botiga.com;676767666
+cliente1;1;$2y$10$XfadOFeqo.ViQt.T7vQRH.o.SdjhG4BOi0vfdcmyUawtEC5SzsoEe;cliente;Joan;Garcia;cliente1@botiga.com;676767676;Valencia 666;gestor2
+gestor2;2;$2y$10$wI8e/.qVSoCFbWncNMlu9.O17xJxYIMXYr97cxBGHwnI7zpuLfSyu;gestor;Didac;Roca;gestor2@botiga.com;676767666
+cliente2;2;$2y$10$XfadOFeqo.ViQt.T7vQRH.o.SdjhG4BOi0vfdcmyUawtEC5SzsoEe;cliente;David;Li;cliente2@botiga.com;676767676;Valencia 555;gestor3
+gestor3;3;$2y$10$gUpQ.nmPBb7V5VdVtiZ.Ve/RWOPR6XKoq0NdZZPEFiDT6/llt7Lse;gestor;Joan;Garcia;gestor3@botiga.com;777777777
+Pep;04;$2y$10$TBW/YaIUb2dt2LNykbFbHeXE0cKDdXX2WPBDLNagc2TauZKaQ9CuK;cliente;Pepe;Morillas;pepebotellas@bonaparte.es;+40 738157508;C/ Pep Nº Pep Pep;gestor3
