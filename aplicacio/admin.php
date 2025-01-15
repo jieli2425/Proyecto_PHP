@@ -290,7 +290,7 @@ foreach ($clients as $cliente) {
     <button type="submit">Esborrar</button>
 </form>
 
-<form method="GET" action="generarPDF.php">
+<form method="GET" action="./codigosPDF/generarPDF.php">
     <button type=submit name="tipo" value="gestor">Gestores PDF</button>
 </form>
 <!-- Formulari per crear un client -->
@@ -362,7 +362,7 @@ foreach ($clients as $cliente) {
     <button type="submit">Esborrar</button>
 </form>
 
-<form method="GET" action="generarPDF.php">
+<form method="GET" action="./codigosPDF/generarPDF.php">
     <button type=submit name="tipo" value="cliente">Clientes PDF</button>
 </form>
 

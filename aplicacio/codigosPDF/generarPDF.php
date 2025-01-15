@@ -1,5 +1,5 @@
 <?php
-require '..//vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -22,7 +22,7 @@ $options = new Options();
 $dompdf = new Dompdf($options);
 
 // Archivo con los datos de usuarios
-$archivoUsuarios = '..//usuaris/usuaris.txt';
+$archivoUsuarios = '../../usuaris/usuaris.txt';
 
 // Función para obtener datos según el tipo (gestor o cliente)
 function obtenerDatos($fitxer, $tipo) {

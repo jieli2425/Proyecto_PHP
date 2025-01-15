@@ -112,7 +112,7 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
 <form method="POST">
     <h3>Eliminar un producto</h3>
     <label for="identificador">ID del producto a eliminar:</label><br>
-    <input type="number" name="identificador" min="0" required><br><br>
+    <input type="number" name="identificador" min="0" required><br>
     <input type="hidden" name="accion" value="eliminar">
     <button type="submit">Eliminar Producto</button>
 </form>
@@ -142,6 +142,10 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
     </tbody>
 </table>
 <br>
+
+<form method="POST" action="./codigosPDF/generarProductosPDF.php">
+    <button type="submit" name="listaProductos">Productos PDF</button>
+</form>
 
 <form method="POST" action="index.php">
     <button type="submit">Volver</button>
