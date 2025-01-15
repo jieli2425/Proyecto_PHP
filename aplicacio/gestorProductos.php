@@ -8,6 +8,48 @@ if ($_SESSION['tipo'] != 'gestor') {
 
 // Archivo de productos
 $archivoProductos = '../productes/productes.txt';
+$archivoUsuarios = '../usuaris/usuaris.txt';
+
+function obtenirUsuaris($fitxer, $tipo) {
+    $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $resultat = [];
+    
+    foreach ($usuaris as $usuari) {
+        $camps = explode(';', $usuari);
+        $rol = $camps[3] ?? null;
+
+        if ($rol === $tipo) {
+            if ($tipo === 'cliente' && count($camps) >= 9) {
+                $resultat[] = [
+                    'usuario' => $camps[0],
+                    'id' => $camps[1],
+                    'password' => $camps[2],
+                    'nom' => $camps[4],
+                    'cognoms' => $camps[5],
+                    'correo' => $camps[6],
+                    'telefon' => $camps[7],
+                    'adreça' => $camps[8],
+                    'gestor_assignat' => $camps[9]
+                ];
+            }
+        }
+    }
+    return $resultat;
+}
+
+$clients = obtenirUsuaris($archivoUsuarios, 'cliente');
+echo "<h3>Lista de Clientes</h3>";
+foreach ($clients as $cliente) {
+    echo "Usuario: {$cliente['usuario']}<br>";
+    echo "ID: {$cliente['id']}<br>";
+    echo "Nombre: {$cliente['nom']}<br>";
+    echo "Apellidos: {$cliente['cognoms']}<br>";
+    echo "Correo: {$cliente['correo']}<br>";
+    echo "Teléfono: {$cliente['telefon']}<br>";
+    echo "Dirección: {$cliente['adreça']}<br>";
+    echo "Gestor Asignado: {$cliente['gestor_assignat']}<br>";
+    echo "<hr>";
+}
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
@@ -40,6 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
 $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNORE_NEW_LINES) : [];
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <br><br>
 <form method="POST">
     <label for="nombre">Nombre del producto:</label><br>
     <input type="text" name="nombre" required><br><br>
@@ -95,3 +146,5 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
 <form method="POST" action="index.php">
     <button type="submit">Volver</button>
 </form>
+</body>
+</html>

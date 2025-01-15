@@ -10,11 +10,10 @@ if (!isset($_SESSION['usuario'])) {
 echo "Hola, " . $_SESSION['usuario'] . " ";
 
 if ($_SESSION['tipo'] == 'admin') {
-    echo "<a href='admin.php'>Administración</a>";
-    echo "<a href='gestor.php'>Gestión de productos</a>";
+    echo "<a href='admin.php'>Administración</a>", " ";
     echo "<a href='logout.php'>Cerrar sesión</a>";
 } elseif ($_SESSION['tipo'] == 'gestor') {
-    echo "<a href='gestor.php'>Gestión de productos</a>";
+    echo "<a href='gestorProductos.php'>Gestión de productos</a>", " ";
     echo "<a href='logout.php'>Cerrar sesión</a>";
 } elseif ($_SESSION['tipo'] == 'cliente') {
     echo "<a href='cliente.php'>Mi cuenta</a> ";
