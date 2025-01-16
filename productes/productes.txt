@@ -1,5 +1,5 @@
 Portàtil|1|799.99|21|Sí
-Smartphone|2|499.99|21|Sí
+Manzana|2|2|10|Sí
 Auriculars|3|79.99|21|Sí
 Rellotge intel·ligent|4|159.99|21|Sí
 Maus|5|29.99|21|Sí
@@ -8,6 +8,6 @@ Monitor|7|199.99|21|Sí
 Tablet|8|349.99|21|Sí
 Mochila|9|39.99|21|Sí
 Càrrega sense fils|10|19.99|21|Sí
-Melon|0|2|21|Sí|
-Manzana|2|2|10|Sí|
-Television|1|1000|21|Sí
+Melon|0|2|21|Sí
+Manzana|2|2|10|Sí
+Portàtil|1|799.99|21|Sí

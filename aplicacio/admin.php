@@ -125,3 +125,157 @@ foreach ($clients as $cliente) {
 echo "<h3>Mensajes Enviados</h3>";
 mostrarMensajes($archivoMensajes);
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h3>Modificar dades de l'administrador</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="modificar_admin">
+    <label for="usuario">Nom d'usuari:</label>
+    <input type="text" name="usuario" required><br>
+    <label for="password">Contrasenya:</label>
+    <input type="password" name="password" required><br>
+    <label for="correo">Correu electrònic:</label>
+    <input type="email" name="correo" required><br>
+    <button type="submit">Modificar</button>
+</form>
+
+<!-- Formulari per crear un gestor -->
+<h3>Crear nou gestor</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="crear_gestor">
+    <label for="usuario">Nuevo Gestor:</label>
+    <input type="text" name="usuario" required><br>
+    <label for="id">Identificador numèric:</label>
+    <input type="number" name="id" min="0" required><br>
+    <label for="password">Contrasenya:</label>
+    <input type="password" name="password" required><br>
+    <label for="nom">Nom:</label>
+    <input type="text" name="nom" required><br>
+    <label for="cognoms">Cognoms:</label>
+    <input type="text" name="cognoms" required><br>
+    <label for="correo">Correu electrònic:</label>
+    <input type="email" name="correo" required><br>
+    <label for="telefon">Telèfon de contacte:</label>
+    <input type="text" name="telefon" required><br>
+    <button type="submit">Crear</button>
+</form>
+
+<h3>Modificar un gestor</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="modificar_gestor">
+    <label for="usuario">Nom d'usuari:</label>
+    <input type="text" name="usuario" required><br>
+    <label for="id">Identificador:</label>
+    <input type="number" name="id" required><br>
+    <label for="password">Contrasenya:</label>
+    <input type="password" name="password" required><br>
+    <label for="nom">Nom:</label>
+    <input type="text" name="nom" required><br>
+    <label for="cognoms">Cognoms:</label>
+    <input type="text" name="cognoms" required><br>
+    <label for="correo">Correu:</label>
+    <input type="email" name="correo" required><br>
+    <label for="telefon">Telèfon:</label>
+    <input type="text" name="telefon" required><br>
+    <button type="submit">Modificar</button>
+</form>
+
+<h3>Esborrar un gestor</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="esborrar_gestor">
+    <label for="usuario">Selecciona un gestor:</label>
+    <select name="usuario" required>
+        <?php foreach ($gestors as $gestor) {
+            echo "<option value=\"{$gestor['usuario']}\">{$gestor['usuario']}</option>";
+        } ?>
+    </select><br>
+    <button type="submit">Esborrar</button>
+</form>
+
+<form method="GET" action="./codigosPDF/generarPDF.php">
+    <button type=submit name="tipo" value="gestor">Gestores PDF</button>
+</form>
+<!-- Formulari per crear un client -->
+<h3>Crear nou client</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="crear_client">
+    <label for="usuario">Nom d'usuari:</label>
+    <input type="text" name="usuario" required><br>
+    <label for="id">Identificador numèric:</label>
+    <input type="number" name="id" min="0" required><br>
+    <label for="password">Contrasenya:</label>
+    <input type="password" name="password" required><br>
+    <label for="correo">Correu electrònic:</label>
+    <input type="email" name="correo" required><br>
+    <label for="nom">Nom:</label>
+    <input type="text" name="nom" required><br>
+    <label for="cognoms">Cognoms:</label>
+    <input type="text" name="cognoms" required><br>
+    <label for="telefon">Telèfon:</label>
+    <input type="text" name="telefon" required><br>
+    <label for="adreça">Adreça:</label>
+    <input type="text" name="adreça" required><br>
+    <label for="gestor">Gestor assignat:</label>
+    <select name="gestor" required>
+        <?php foreach ($gestors as $gestor) {
+            echo "<option value=\"{$gestor['usuario']}\">{$gestor['usuario']}</option>";
+        } ?>
+    </select><br>
+    <button type="submit">Crear</button>
+</form>
+
+<h3>Modificar un client</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="modificar_cliente">
+    <label for="usuario">Nom d'usuari:</label>
+    <input type="text" name="usuario" required><br>
+    <label for="id">Identificador:</label>
+    <input type="number" name="id" required><br>
+    <label for="password">Contrasenya:</label>
+    <input type="password" name="password" required><br>
+    <label for="nom">Nom:</label>
+    <input type="text" name="nom" required><br>
+    <label for="cognoms">Cognoms:</label>
+    <input type="text" name="cognoms" required><br>
+    <label for="correo">Correu:</label>
+    <input type="email" name="correo" required><br>
+    <label for="telefon">Telèfon:</label>
+    <input type="text" name="telefon" required><br>
+    <label for="adreça">Adreça:</label>
+    <input type="text" name="adreça" required><br>
+    <label for="gestor">Gestor assignat:</label>
+    <select name="gestor" required>
+        <?php foreach ($gestors as $gestor) {
+            echo "<option value=\"{$gestor['usuario']}\">{$gestor['usuario']}</option>";
+        } ?>
+    </select><br>
+    <button type="submit">Modificar</button>
+</form>
+
+<h3>Esborrar un client</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="esborrar_client">
+    <label for="usuario">Selecciona un client:</label>
+    <select name="usuario" required>
+        <?php foreach ($clients as $cliente) {
+            echo "<option value=\"{$cliente['usuario']}\">{$cliente['usuario']}</option>";
+        } ?>
+    </select><br>
+    <button type="submit">Esborrar</button>
+</form>
+
+<form method="GET" action="./codigosPDF/generarPDF.php">
+    <button type=submit name="tipo" value="cliente">Clientes PDF</button>
+</form>
+
+<form method="POST" action="index.php">
+    <button type="submit">Volver</button>
+</form>
+</body>
+</html>
