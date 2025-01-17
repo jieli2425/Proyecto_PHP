@@ -105,9 +105,9 @@ if (isset($_POST['producto'])) {
 
         // Si no se encontró el producto, añadirlo como nuevo
         if (!$productoEnCesta) {
-            $precio = $precio * $quantitat;
+            $precioTotal = $precio * $quantitat;
             // Se añaden todos los detalles del producto al guardar en la cesta
-            $cestaArray[] = "$nombre|$idProducto|$precio|$iva|$quantitat";
+            $cestaArray[] = "$nombre|$idProducto|$precioTotal|$iva|$quantitat";
         }
     }
 
@@ -118,9 +118,6 @@ if (isset($_POST['producto'])) {
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
-
-
-
 // Función para eliminar un producto de la cesta
 function eliminarProducto($idProducto, $cestaArray, $cestaFile)
 {
