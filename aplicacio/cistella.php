@@ -174,7 +174,7 @@ $totalIVA = $totals['IVA'];
 $totalAmbIVA = $totals['ambIVA'];
 
 // Mostrar la tabla con los productos seleccionados
-echo "<h3>Resum de la cistella:</h3>";
+echo "<h3>Resum de la cistella: </h3>" . $_SESSION['usuario'];
 echo "<table border='1'>
         <thead>
             <tr>
