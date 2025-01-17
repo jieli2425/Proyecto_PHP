@@ -10,34 +10,6 @@ if ($_SESSION['tipo'] != 'gestor') {
 $archivoProductos = '../productes/productes.txt';
 $archivoUsuarios = '../usuaris/usuaris.txt';
 
-// Función para obtener usuarios de un tipo específico (gestor o cliente)
-function obtenirUsuaris($fitxer, $tipo) {
-    $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    $resultat = [];
-
-    foreach ($usuaris as $usuari) {
-        $camps = explode(';', $usuari);
-        $rol = $camps[3] ?? null;
-
-        if ($rol === $tipo) {
-            if ($tipo === 'cliente' && count($camps) >= 9) {
-                $resultat[] = [
-                    'usuario' => $camps[0],
-                    'id' => $camps[1],
-                    'password' => $camps[2],
-                    'nom' => $camps[4],
-                    'cognoms' => $camps[5],
-                    'correo' => $camps[6],
-                    'telefon' => $camps[7],
-                    'adreça' => $camps[8],
-                    'gestor_assignat' => $camps[9]
-                ];
-            }
-        }
-    }
-    return $resultat;
-}
-
 // Obtener el correo del administrador
 function obtenirCorreoAdmin($fitxer) {
     $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

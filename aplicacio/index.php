@@ -11,6 +11,7 @@ echo "Hola, " . $_SESSION['usuario'] . " ";
 
 if ($_SESSION['tipo'] == 'admin') {
     echo "<a href='admin.php'>Administración</a>", " ";
+    echo "<a href='../usuaris/usuaris.txt'>Ver Txt</a>", " ";
     echo "<a href='logout.php'>Cerrar sesión</a>";
 } elseif ($_SESSION['tipo'] == 'gestor') {
     echo "<a href='gestorProductos.php'>Gestionar productos</a>", " ";
