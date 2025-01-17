@@ -1,5 +1,5 @@
 <?php
-session_start(); // Asegúrate de que session_start() esté aquí para trabajar con la sesión
+session_start();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -8,101 +8,128 @@ require '../vendor/autoload.php';
 
 // Verificar que el usuario es cliente
 if ($_SESSION['tipo'] != 'cliente') {
-    header('Location: login.php');
+    echo "<p style='color: red;'>No autorizado.</p>";
     exit;
 }
 
 // Funciones para obtener correos
 function obtenerCorreoCliente($fitxer, $usuarioCliente) {
     $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    
     foreach ($usuaris as $usuari) {
         $camps = explode(';', $usuari);
-
-        // El índice 0 es para el nombre de usuario y el índice 6 para el correo del cliente
         if (isset($camps[0]) && $camps[0] == $usuarioCliente && $camps[3] == 'cliente') {
-            return $camps[6] ?? null; // Correo del cliente
+            return $camps[6] ?? null;
         }
     }
-    return null; // Si no se encuentra el correo del cliente
+    return null;
 }
 
 function obtenerCorreoGestorAsignado($fitxer, $usuarioCliente) {
     $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    
     foreach ($usuaris as $usuari) {
         $camps = explode(';', $usuari);
-
-        // Buscar el gestor asignado al cliente
         if (isset($camps[0]) && $camps[0] == $usuarioCliente && $camps[3] == 'cliente') {
-            $gestorAsignado = $camps[9] ?? null; // Gestor asignado al cliente
-
-            // Buscar el correo del gestor asignado
+            $gestorAsignado = $camps[9] ?? null;
             foreach ($usuaris as $gestor) {
                 $datosGestor = explode(';', $gestor);
                 if (isset($datosGestor[0]) && $datosGestor[0] == $gestorAsignado && $datosGestor[3] == 'gestor') {
-                    return $datosGestor[6] ?? null; // Correo del gestor asignado
+                    return $datosGestor[6] ?? null;
                 }
             }
         }
     }
-    return null; // Si no se encuentra el correo del gestor
+    return null;
 }
 
-// Función para enviar correo y registrar
 function enviarCorreo($correoCliente, $correoGestor, $asunto, $mensaje) {
     $mail = new PHPMailer(true);
-
     try {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'joan2005garcia@gmail.com'; // Cambia esto con tu correo
-        $mail->Password = 'qgmc iygr itau zhqy'; // Cambia esto con tu contraseña o app password
+        $mail->Username = 'joan2005garcia@gmail.com';
+        $mail->Password = 'qgmc iygr itau zhqy';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
-        $mail->setFrom($correoCliente, 'Cliente'); // El correo del cliente
-        $mail->addAddress($correoGestor, 'Gestor Asignado'); // El correo del gestor asignado
-        $mail->addReplyTo($correoCliente, 'Cliente'); // Responder al correo del cliente
+        $mail->setFrom($correoCliente, 'Cliente');
+        $mail->addAddress($correoGestor, 'Gestor Asignado');
+        $mail->addReplyTo($correoCliente, 'Cliente');
 
-        $mail->isHTML(false); // Enviar como texto plano
+        $mail->isHTML(false);
         $mail->Subject = $asunto;
         $mail->Body = $mensaje;
 
         $mail->send();
 
-        // Guardar el registro en un archivo de texto
         $registro = date('Y-m-d H:i:s') . " | Correo enviado desde: $correoCliente | Destinatario: $correoGestor  | Asunto: $asunto | Mensaje: $mensaje\n";
-        
-        // Abrir el archivo de registro (o crear uno si no existe)
-        $archivoRegistro = '../registro_correos.txt'; // Ruta del archivo de registro
-        $file = fopen($archivoRegistro, 'a'); // 'a' para añadir contenido al final del archivo
+        $archivoRegistro = '../registro_correos.txt';
+        $file = fopen($archivoRegistro, 'a');
         fwrite($file, $registro);
         fclose($file);
 
-        return "Correo enviado correctamente y registrado.";
+        return true;
     } catch (Exception $e) {
-        return "Error al enviar el correo. {$mail->ErrorInfo}";
+        return $e->getMessage();
     }
 }
 
-// Código para enviar correo
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['enviar_correo'])) {
-    $archivoUsuarios = "../usuaris/usuaris.txt";
-    $correoCliente = obtenerCorreoCliente($archivoUsuarios, $_SESSION['usuario']); // Obtener el correo del cliente desde el archivo
-    $correoGestor = obtenerCorreoGestorAsignado($archivoUsuarios, $_SESSION['usuario']); // Obtener el correo del gestor asignado desde el archivo
-    $mensaje = $_POST['mensaje'];
-    $asunto = "Petició d'adicció/modificació/esborrament del client";
+// Inicializar variables para mostrar mensajes
+$mensajeResultado = "";
 
-    // Verificar si los correos se obtuvieron correctamente
-    if (!$correoCliente || !$correoGestor) {
-        echo "<p style='color: red;'>No se pudieron obtener los correos.</p>";
-        exit;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $archivoUsuarios = "../usuaris/usuaris.txt";
+    $correoCliente = obtenerCorreoCliente($archivoUsuarios, $_SESSION['usuario']);
+    $correoGestor = obtenerCorreoGestorAsignado($archivoUsuarios, $_SESSION['usuario']);
+    $mensaje = $_POST['mensaje'] ?? '';
+    $tipoPeticion = $_POST['tipo_peticion'] ?? '';
+
+    if ($tipoPeticion === 'modificacion_esborrament') {
+        $asunto = "Petició de modificació o esborrament del compte";
+    } elseif ($tipoPeticion === 'justificacio_comanda') {
+        $asunto = "Petició de justificació de comanda rebutjada";
+    } else {
+        $asunto = "Petició desconeguda";
     }
 
-    // Llamar a la función para enviar el correo
-    $resultado = enviarCorreo($correoCliente, $correoGestor, $asunto, $mensaje);
-    echo "<p style='color: green;'>$resultado</p>";
+    if (!$correoCliente || !$correoGestor) {
+        $mensajeResultado = "<p style='color: red;'>No se pudieron obtener los correos.</p>";
+    } else {
+        $resultado = enviarCorreo($correoCliente, $correoGestor, $asunto, $mensaje);
+        if ($resultado === true) {
+            $mensajeResultado = "<p style='color: green;'>Correo enviado correctamente.</p>";
+        } else {
+            $mensajeResultado = "<p style='color: red;'>Error al enviar el correo: $resultado</p>";
+        }
+    }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Correo</title>
+</head>
+<body>
+    <h1>Enviar Correo</h1>
+    <?php
+    if (!empty($mensajeResultado)) {
+        echo $mensajeResultado; // Mostrar el mensaje de resultado
+    }
+    ?>
+    <form method="post" action="">
+        <label for="tipo_peticion">Tipo de Petición:</label>
+        <select name="tipo_peticion" id="tipo_peticion">
+            <option value="modificacion_esborrament">Modificación o Esborrament</option>
+            <option value="justificacio_comanda">Justificación de Comanda Rechazada</option>
+        </select>
+        <br><br>
+        <label for="mensaje">Mensaje:</label>
+        <textarea name="mensaje" id="mensaje" rows="5" cols="40"></textarea>
+        <br><br>
+        <button type="submit" name="enviar_correo">Enviar Correo</button>
+    </form>
+</body>
+</html>
