@@ -46,11 +46,12 @@ function obtenirCorreoAdmin($fitxer) {
         $camps = explode(';', $usuari);
         $rol = $camps[3] ?? null;
 
-        if ($rol === 'admin' && isset($camps[1])) { 
+        // Verificar que haya al menos 7 campos y que el rol sea admin
+        if ($rol === 'admin' && isset($camps[1])) { // Correo en el índice 1
             return $camps[1]; // Correo del administrador
         }
     }
-    return null; 
+    return null; // Si no se encuentra el correo del admin
 }
 
 // Obtener el correo del gestor
@@ -65,7 +66,7 @@ function obtenirCorreoGestor($fitxer, $usuarioGestor) {
             return $camps[6]; // Correo del gestor
         }
     }
-    return null; 
+    return null; // Si no se encuentra el correo del gestor
 }
 
 $correoAdmin = obtenirCorreoAdmin($archivoUsuarios);
@@ -88,31 +89,23 @@ foreach ($clients as $cliente) {
     echo "<hr>";
 }
 
-// Verificar si el formulario ha sido enviado
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
-    // añadir producto
-    if ($_POST['accion'] == 'agregar') {
-    $nombre = $_POST['nombre'];
-    $id = $_POST['id'];
-    $precio = $_POST['precio'];
-    $iva = $_POST['iva'];
-    $disponible = $_POST['disponible'];
+// Enviar correo
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['enviar_correo'])) {
+    $correoGestor = obtenirCorreoGestor($archivoUsuarios, $_SESSION['usuario']); // Obtener correo del gestor desde archivo
+    $asunto = "petició d'addició/modificació/esborrament de client"; // Asunto fijo
+    $mensaje = $_POST['mensaje'];
 
-    // Crear entrada del producto
-    $producto = "$nombre|$id|$precio|$iva|$disponible\n";
-    file_put_contents($archivoProductos, $producto, FILE_APPEND);
-    $mensaje = "Producto agregado correctamente.";
-    // eliminar producto
-    }elseif($_POST['accion'] == 'eliminar' && isset($_POST['id'])) {
-        $productos = file($archivoProductos, FILE_IGNORE_NEW_LINES);
-        $productosFiltrados = array_filter($productos, function ($producto) {
-            list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto);
-            return $id != $_POST['id'];
-        });
+    // Validar datos
+    if (filter_var($correoGestor, FILTER_VALIDATE_EMAIL) && filter_var($correoAdmin, FILTER_VALIDATE_EMAIL)) {
+        // Incluir el archivo externo para enviar el correo
+        include('enviar_correogestor.php');
+
+        // Llamar a la función para enviar el correo
+        $resultado = enviarCorreo($correoGestor, $correoAdmin, $asunto, $mensaje);
+        echo "<p style='color: green;'>$resultado</p>";
+    } else {
+        echo "<p style='color: red;'>Direcciones de correo no válidas.</p>";
     }
-
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
 }
 
 // Leer y mostrar productos
@@ -120,7 +113,7 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,10 +122,12 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
 <body>
     <h3>Enviar correo al administrador</h3>
     <form method="POST">
-        <label for="mensaje">Mensaje:</label><br>
-        <textarea id="mensaje" name="mensaje" rows="5" required></textarea><br><br>
-        <button type="submit" name="enviar_correo">Petició d'addició/modificació/esborrament de client</button>
-    </form>
+    <label for="mensaje">Mensaje:</label><br>
+    <textarea id="mensaje" name="mensaje" rows="5" required></textarea><br><br>
+
+    <!-- Botón con el asunto como texto -->
+    <button type="submit" name="enviar_correo"><?php echo "petició d'addició/modificació/esborrament de client"; ?></button>
+</form>
 
     <br><br>
     <form method="POST">
@@ -153,39 +148,39 @@ $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNOR
         <button type="submit">Agregar producto</button>
     </form>
 
-<form method="POST">
-    <h3>Eliminar un producto</h3>
-    <label for="identificador">ID del producto a eliminar:</label><br>
-    <input type="number" name="identificador" min="0" required><br><br>
-    <input type="hidden" name="accion" value="eliminar">
-    <button type="submit">Eliminar Producto</button>
-</form>
+    <form method="POST">
+        <h3>Eliminar un producto</h3>
+        <label for="identificador">ID del producto a eliminar:</label><br>
+        <input type="number" name="id" min="0" required><br><br>
+        <input type="hidden" name="accion" value="eliminar">
+        <button type="submit">Eliminar Producto</button>
+    </form>
 
-<h2>Lista de productos</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>ID</th>
-            <th>Precio</th>
-            <th>IVA</th>
-            <th>Disponible</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($productos as $producto): ?>
-            <?php list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto); ?>
+    <h2>Lista de productos</h2>
+    <table border="1">
+        <thead>
             <tr>
-                <td><?php echo htmlspecialchars($nombre); ?></td>
-                <td><?php echo htmlspecialchars($id); ?></td>
-                <td><?php echo htmlspecialchars($precio); ?> €</td>
-                <td><?php echo htmlspecialchars($iva); ?>%</td>
-                <td><?php echo htmlspecialchars($disponible); ?></td>
+                <th>Nombre</th>
+                <th>ID</th>
+                <th>Precio</th>
+                <th>IVA</th>
+                <th>Disponible</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-<br>
+        </thead>
+        <tbody>
+            <?php foreach ($productos as $producto): ?>
+                <?php list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto); ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($nombre); ?></td>
+                    <td><?php echo htmlspecialchars($id); ?></td>
+                    <td><?php echo htmlspecialchars($precio); ?> €</td>
+                    <td><?php echo htmlspecialchars($iva); ?>%</td>
+                    <td><?php echo htmlspecialchars($disponible); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <br>
 
     <form method="POST" action="index.php">
         <button type="submit">Volver</button>
