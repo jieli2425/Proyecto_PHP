@@ -53,6 +53,9 @@ function obtenirUsuaris($fitxer, $tipo) {
     return $resultat;
 }
 
+
+
+
 // Función para mostrar los mensajes enviados
 function mostrarMensajes($archivoMensajes) {
     if (file_exists($archivoMensajes)) {
@@ -79,7 +82,128 @@ function mostrarMensajes($archivoMensajes) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['accio'])) {
-        // Aquí van las acciones para crear/editar/eliminar gestores y clientes, etc.
+        $accio = $_POST['accio'];
+
+        if ($accio === 'crear_gestor') {
+            $nouGestor = [
+                $_POST['usuario'],
+                $_POST['id'],
+                password_hash($_POST['password'], PASSWORD_DEFAULT),
+                'gestor',
+                $_POST['nom'],
+                $_POST['cognoms'],
+                $_POST['correo'],
+                $_POST['telefon']
+            ];
+            file_put_contents($archivoUsuarios, implode(';', $nouGestor) . "\n", FILE_APPEND);
+            echo "Gestor creado correctamente.<br>";
+        } elseif ($accio === 'esborrar_gestor') {
+            $usuariEsborrar = $_POST['usuario'];
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $novesLinies = array_filter($linies, function ($linia) use ($usuariEsborrar) {
+                return !str_starts_with($linia, $usuariEsborrar . ';');
+            });
+            file_put_contents($archivoUsuarios, implode("\n", $novesLinies) . "\n");
+            echo "Gestor esborrat correctament.<br>";
+        } elseif ($accio === 'modificar_gestor') {
+            $usuariModificar = $_POST['usuario'];
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($linies as &$linia) {
+                if (str_starts_with($linia, $usuariModificar . ';')) {
+                    $nouGestor = [
+                        $_POST['usuario'],
+                        $_POST['id'],
+                        password_hash($_POST['password'], PASSWORD_DEFAULT),
+                        'gestor',
+                        $_POST['nom'],
+                        $_POST['cognoms'],
+                        $_POST['correo'],
+                        $_POST['telefon']
+                    ];
+                    $linia = implode(';', $nouGestor);
+                    break;
+                }
+            }
+            file_put_contents($archivoUsuarios, implode("\n", $linies) . "\n");
+            echo "Dades del gestor modificades correctament.<br>";
+        }elseif ($accio === 'crear_client') {
+            $nouClient = [
+                $_POST['usuario'],
+                $_POST['id'],
+                password_hash($_POST['password'], PASSWORD_DEFAULT),
+                'cliente',
+                $_POST['nom'],
+                $_POST['cognoms'],
+                $_POST['correo'],
+                $_POST['telefon'],
+                $_POST['adreça'],
+                $_POST['gestor']
+            ];
+            file_put_contents($archivoUsuarios, implode(';', $nouClient) . "\n", FILE_APPEND);
+            echo "Cliente creado correctamente.<br>";
+        } elseif ($accio === 'esborrar_client') {
+            $usuariEsborrar = $_POST['usuario'];
+            
+            // Eliminar cliente del archivo
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $novesLinies = array_filter($linies, function ($linia) use ($usuariEsborrar) {
+                return !str_starts_with($linia, $usuariEsborrar . ';');
+            });
+            file_put_contents($archivoUsuarios, implode("\n", $novesLinies) . "\n");
+
+            // Eliminar carpetas asociadas
+            $carpetaComandes = "../comandes/$usuariEsborrar";
+            $carpetaCistelles = "../cistelles/$usuariEsborrar";
+            
+            if (is_dir($carpetaComandes)) {
+                array_map('unlink', glob("$carpetaComandes/."));
+                rmdir($carpetaComandes);
+            }
+            
+            if (is_dir($carpetaCistelles)) {
+                array_map('unlink', glob("$carpetaCistelles/."));
+                rmdir($carpetaCistelles);
+            }
+            echo "Cliente y carpetas asociadas eliminados correctamente.<br>";
+
+        } elseif ($accio === 'modificar_cliente') {
+            $usuariModificar = $_POST['usuario'];
+            
+            // Modificar datos del cliente en el archivo
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($linies as &$linia) {
+                if (str_starts_with($linia, $usuariModificar . ';')) {
+                    $nouClient = [
+                        $_POST['usuario'],
+                        $_POST['id'],
+                        password_hash($_POST['password'], PASSWORD_DEFAULT),
+                        'cliente',
+                        $_POST['nom'],
+                        $_POST['cognoms'],
+                        $_POST['correo'],
+                        $_POST['telefon'],
+                        $_POST['adreça'],
+                        $_POST['gestor']
+                    ];
+                    $linia = implode(';', $nouClient);
+                    break;
+                }
+            }
+            file_put_contents($archivoUsuarios, implode("\n", $linies) . "\n");
+            echo "Dades del client modificades correctament.<br>";
+        }elseif ($accio === 'modificar_admin') {
+            $modiAdmin = "{$_POST['usuario']};{$_POST['correo']};" . password_hash($_POST['password'], PASSWORD_DEFAULT) . ";admin\n";
+        
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($linies as $index => $linea) {
+                if (strpos($linea, ';admin') !== false) {
+                    $linies[$index] = $modiAdmin;
+                    break;
+                }
+            }
+            file_put_contents($archivoUsuarios, implode("\n", $linies) . "\n");
+            echo "Dades de l'administrador modificades correctament.<br>";
+        }
     }
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
