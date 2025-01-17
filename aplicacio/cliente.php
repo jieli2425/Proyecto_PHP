@@ -53,25 +53,25 @@ if ($datosUsuario) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Client Panel</title>
 </head>
 <body>
-        <!-- Formulari per demanar la modificació o l'esborrament del compte -->
-<h3>Modificar o esborrar el teu compte</h3>
-<form method="POST" action="enviar_correo.php">
-    <textarea name="contenido" placeholder="Escriu el teu missatge aquí..." required></textarea><br>
-    <button type="submit" name="accion" value="modificar">Petició de modificació/esborrament del compte</button>
-</form>
+    <!-- Formulari per demanar la modificació o l'esborrament del compte -->
+    <h3>Modificar o esborrar el teu compte</h3>
+    <form method="POST" action="enviar_correocliente.php">
+        <textarea name="mensaje" placeholder="Escriu el teu missatge aquí..." required></textarea><br>
+        <button type="submit" name="enviar_correo">Petició de modificació/esborrament del compte</button>
+    </form>
     
     <!-- Formulari per demanar la justificació de comanda rebutjada -->
-<h3>Justificació de comanda rebutjada</h3>
-<form method="POST" action="enviar_correo.php">
-    <textarea name="contenido" placeholder="Escriu el teu missatge aquí..." required></textarea><br>
-    <button type="submit" name="accion" value="justificacio">Petició de justificació de comanda rebutjada</button>
-</form>
+    <h3>Justificació de comanda rebutjada</h3>
+    <form method="POST" action="enviar_correocliente.php">
+        <textarea name="mensaje" placeholder="Escriu el teu missatge aquí..." required></textarea><br>
+        <button type="submit" name="enviar_correo">Petició de justificació de comanda rebutjada</button>
+    </form>
 
-<form method="POST" action="index.php">
-    <button type="submit">Volver</button>
-</form>
+    <form method="POST" action="index.php">
+        <button type="submit">Volver</button>
+    </form>
 </body>
 </html>
