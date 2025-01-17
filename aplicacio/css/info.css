@@ -1,0 +1,185 @@
+/* Restablecer algunos estilos por defecto del navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Establecer la fuente general */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Color de fondo claro */
+    color: black; /* Texto oscuro */
+    line-height: 1.6;
+}
+
+/* Encabezado */
+header {
+    background-color: black; /* Color azul suave */
+    color: white;
+    text-align: center;
+    padding: 40px 0;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2rem;
+}
+
+/* Contenedor principal */
+section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Títulos y subtítulos */
+h2, h3 {
+    color: black;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+/* Botones */
+button, .btn-login {
+    background-color: black; /* Verde fresco */
+    color: #fff;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, .btn-login:hover {
+    background-color: gray; /* Verde más oscuro */
+}
+
+/* Enlaces de botones */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input[type="text"], input[type="password"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f1f1f1;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+    border-color: #007bff; /* Resaltar con azul cuando están en foco */
+    background-color: #fff;
+}
+
+/* Pie de página */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    font-size: 1rem;
+}
+
+/* Estilo de la sección de la lista de productos o comandos */
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    font-size: 1.1rem;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilos de la tabla (si fuera necesario) */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Centrar la sección de "Accede a tu cuenta" */
+.centro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30vh; /* Ocupa toda la altura de la ventana */
+    text-align: center;
+    margin-bottom: 10vh;
+}
+
+.centro h2 {
+    margin-bottom: 20px;
+}
+
+.centro p {
+    margin-bottom: 20px;
+}
+
+.centro .btn-login {
+    width: 200px;
+    padding: 12px;
+    font-size: 1.2rem;
+}
+
+
+/* Media queries para diseño responsivo */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    section {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    button, .btn-login {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+}
