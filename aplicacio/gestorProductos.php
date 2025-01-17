@@ -108,6 +108,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['enviar_correo'])) {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
+    // añadir producto
+    if ($_POST['accion'] == 'agregar') {
+    $nombre = $_POST['nombre'];
+    $id = $_POST['id'];
+    $precio = $_POST['precio'];
+    $iva = $_POST['iva'];
+    $disponible = $_POST['disponible'];
+
+    // Crear entrada del producto
+    $producto = "$nombre|$id|$precio|$iva|$disponible\n";
+    file_put_contents($archivoProductos, $producto, FILE_APPEND);
+    $mensaje = "Producto agregado correctamente.";
+    // eliminar producto
+    }elseif($_POST['accion'] == 'eliminar' && isset($_POST['id'])) {
+        $productos = file($archivoProductos, FILE_IGNORE_NEW_LINES);
+        $productosFiltrados = array_filter($productos, function ($producto) {
+            list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto);
+            return $id != $_POST['id'];
+        });
+    }
+
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
 // Leer y mostrar productos
 $productos = file_exists($archivoProductos) ? file($archivoProductos, FILE_IGNORE_NEW_LINES) : [];
 ?>
