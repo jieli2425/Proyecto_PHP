@@ -54,8 +54,6 @@ function obtenirUsuaris($fitxer, $tipo) {
 }
 
 
-
-
 // Función para mostrar los mensajes enviados
 function mostrarMensajes($archivoMensajes) {
     if (file_exists($archivoMensajes)) {
@@ -83,8 +81,7 @@ function mostrarMensajes($archivoMensajes) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['accio'])) {
         $accio = $_POST['accio'];
-
-        if ($accio === 'crear_gestor') {
+            if ($accio === 'crear_gestor') {
             $nouGestor = [
                 $_POST['usuario'],
                 $_POST['id'],
@@ -208,6 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
+}
 
 // Mostrar datos del admin
 $admin = obtenirUsuaris($archivoUsuarios, 'admin')[0] ?? null;
@@ -278,7 +276,8 @@ mostrarMensajes($archivoMensajes);
     <label for="id">Identificador numèric:</label>
     <input type="number" name="id" min="0" required><br>
     <label for="password">Contrasenya:</label>
-    <input type="password" name="password" required><br>
+    <input type="password" name="password" required minlength="8"
+    pattern=".*[A-Z].*" title="Debe contener al menos una mayúscula"><br>
     <label for="nom">Nom:</label>
     <input type="text" name="nom" required><br>
     <label for="cognoms">Cognoms:</label>
@@ -298,7 +297,8 @@ mostrarMensajes($archivoMensajes);
     <label for="id">Identificador:</label>
     <input type="number" name="id" required><br>
     <label for="password">Contrasenya:</label>
-    <input type="password" name="password" required><br>
+    <input type="password" name="password" required minlength="8"
+    pattern=".*[A-Z].*" title="Debe contener al menos una mayúscula"><br>
     <label for="nom">Nom:</label>
     <input type="text" name="nom" required><br>
     <label for="cognoms">Cognoms:</label>
@@ -334,7 +334,8 @@ mostrarMensajes($archivoMensajes);
     <label for="id">Identificador numèric:</label>
     <input type="number" name="id" min="0" required><br>
     <label for="password">Contrasenya:</label>
-    <input type="password" name="password" required><br>
+    <input type="password" name="password" required minlength="8"
+    pattern=".*[A-Z].*" title="Debe contener al menos una mayúscula"><br>
     <label for="correo">Correu electrònic:</label>
     <input type="email" name="correo" required><br>
     <label for="nom">Nom:</label>
@@ -362,7 +363,8 @@ mostrarMensajes($archivoMensajes);
     <label for="id">Identificador:</label>
     <input type="number" name="id" required><br>
     <label for="password">Contrasenya:</label>
-    <input type="password" name="password" required><br>
+    <input type="password" name="password" required minlength="8"
+    pattern=".*[A-Z].*" title="Debe contener al menos una mayúscula"><br>
     <label for="nom">Nom:</label>
     <input type="text" name="nom" required><br>
     <label for="cognoms">Cognoms:</label>
