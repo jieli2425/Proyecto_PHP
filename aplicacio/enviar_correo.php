@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-session_start(); // Asegúrate de que la sesión está iniciada
+session_start();
 
 if ($_SESSION['tipo'] != 'cliente') {
     header('Location: login.php');
@@ -10,64 +10,83 @@ if ($_SESSION['tipo'] != 'cliente') {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require '../vendor/autoload.php'; // Ajusta la ruta a autoload.php
+    require '../vendor/autoload.php';
 
-    // Verificar si las claves 'mensaje' y 'solicitud' existen en $_POST
-    $asunto = "";
-    $mensaje = isset($_POST['mensaje']) ? $_POST['mensaje'] : '';
-    $solicitud = isset($_POST['solicitud']) ? $_POST['solicitud'] : '';
+    $archivoUsuarios = "../usuaris/usuaris.txt";
+    $usuarioCliente = $_SESSION['usuario'];
+    $correoCliente = null;
+    $correoGestor = null;
 
-    // Determinar el asunto según la solicitud
-    if ($solicitud == 'modificar') {
-        $asunto = "Petició de modificació del compte de client";
-    } elseif ($solicitud == 'esborrar') {
-        $asunto = "Petició d'esborrament del compte de client";
-    } elseif ($solicitud == 'justificar_comanda') {
-        $asunto = "Petició de justificació de comanda rebutjada";
+    // Leer datos del archivo
+    $usuarios = file($archivoUsuarios, FILE_IGNORE_NEW_LINES);
+
+    foreach ($usuarios as $usuarioData) {
+        $campos = explode(';', $usuarioData);
+
+        // Identificar al cliente y obtener su correo
+        if ($campos[0] == $usuarioCliente) {
+            $correoCliente = $campos[6]; // Correo del cliente
+            $gestorAsignado = $campos[9]; // Identificador del gestor asignado
+        }
+
+        // Identificar al gestor asignado y obtener su correo
+        if (isset($gestorAsignado) && $gestorAsignado == $campos[0]) {
+            $correoGestor = $campos[4]; // Correo del gestor
+        }
+    }
+
+    // Validar que se encontraron los correos
+    if (!$correoCliente || !$correoGestor) {
+        echo "No s'han pogut obtenir les dades del client o del gestor assignat.";
+        exit;
+    }
+
+    // Obtener el mensaje y la solicitud del formulario
+    $solicitud = trim(strtolower($_POST['solicitud'] ?? ''));
+    $mensaje = $_POST['mensaje'] ?? '';
+    $asunto = '';
+
+    // Depuración
+    echo "Valor de solicitud: " . htmlspecialchars($solicitud) . "<br>";
+
+    switch ($solicitud) {
+        case 'modificar':
+            $asunto = "Petició de modificació del compte";
+            break;
+        case 'esborrar':
+            $asunto = "Petició d'esborrament del compte";
+            break;
+        case 'justificar_comanda':
+            $asunto = "Petició de justificació de comanda rebutjada";
+            break;
+        default:
+            echo "Acció desconeguda.";
+            exit;
     }
 
     // Configuración de PHPMailer
     $mail = new PHPMailer(true);
 
     try {
-        // Configuración del servidor SMTP de Gmail
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'joan2005garcia@gmail.com'; // Tu correo de Gmail
-        $mail->Password = '5d833d99'; // Tu contraseña de Gmail o clave de aplicación
+        $mail->Username = 'joan2005garcia@gmail.com';
+        $mail->Password = 'qgmc iygr itau zhqy';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
-        // Configuración del correo
-        $mail->setFrom('cliente1@botiga.com', 'Joan'); // Remitente
-        $mail->addAddress('gestor1@botiga.com', 'Gestor de la Botiga'); // Destinatario
-        $mail->addReplyTo($_SESSION['usuario'] . '@domini.com', 'Cliente'); // Email del cliente
+        $mail->setFrom($correoCliente, $usuarioCliente);
+        $mail->addAddress($correoGestor, 'Gestor Assignat');
+        $mail->addReplyTo($correoCliente, 'Cliente');
 
-        // Contenido del correo
-        $mail->isHTML(false); // Configurar como texto plano
+        $mail->isHTML(false);
         $mail->Subject = $asunto;
         $mail->Body = $mensaje;
 
-        // Enviar el correo
         $mail->send();
         echo "La teva sol·licitud ha estat enviada correctament.";
     } catch (Exception $e) {
         echo "Hi ha hagut un error en l'enviament del correu. Error: {$mail->ErrorInfo}";
     }
 }
-?>
-
-<!-- Formularios -->
-<form method="POST" action="enviar_correo.php">
-    <label for="mensaje">Explica el motiu per què vols la justificació:</label><br>
-    <textarea name="mensaje" id="mensaje" rows="4" cols="50" required></textarea><br>
-    <button type="submit" name="solicitud" value="justificar_comanda">Petició de justificació de comanda rebutjada</button>
-</form>
-
-<form method="POST" action="enviar_correo.php">
-    <label for="mensaje">Explica la teva petició:</label><br>
-    <textarea name="mensaje" id="mensaje" rows="4" cols="50" required></textarea><br>
-    <button type="submit" name="solicitud" value="modificar">Petició de modificació del compte</button>
-    <button type="submit" name="solicitud" value="esborrar">Petició d'esborrament del compte</button>
-</form>
