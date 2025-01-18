@@ -1,5 +1,0 @@
-Portàtil|1|3999.95|21|5
-Manzana|2|4|10|2
-Auriculars|3|79.99|21|1
-Maus|5|59.98|21|2
-Teclat mecànic|6|99.99|21|1

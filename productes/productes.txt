@@ -9,5 +9,3 @@ Tablet|8|349.99|21|Sí
 Mochila|9|39.99|21|Sí
 Càrrega sense fils|10|19.99|21|Sí
 Melon|0|2|21|Sí
-Manzana|2|2|10|Sí
-Portàtil|1|799.99|21|Sí
