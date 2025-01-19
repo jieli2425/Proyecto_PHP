@@ -1,0 +1,12 @@
+Factura per al usuari: cliente1
+Data: 2025-01-19 16:35:25
+
+Productes seleccionats:
+Nom: Ratón, ID: 5, Quantitat: 1, Preu sense IVA: 29.99 €, IVA: 6.30 €, Preu amb IVA: 36.29 €
+Nom: Teclat mecànic, ID: 6, Quantitat: 1, Preu sense IVA: 99.99 €, IVA: 21.00 €, Preu amb IVA: 120.99 €
+Nom: Manzana, ID: 2, Quantitat: 1, Preu sense IVA: 2.00 €, IVA: 0.20 €, Preu amb IVA: 2.20 €
+Nom: Rellotge intel·ligent, ID: 4, Quantitat: 1, Preu sense IVA: 159.99 €, IVA: 33.60 €, Preu amb IVA: 193.59 €
+
+Total sense IVA: 291.97 €
+IVA: 61.09 €
+Total amb IVA: 353.06 €

@@ -11,7 +11,7 @@ $archivoProductos = '../productes/productes.txt';
 $archivoUsuarios = '../usuaris/usuaris.txt';
 
 // Función para obtener usuarios de un tipo específico (gestor o cliente)
-function obtenirUsuaris($fitxer, $tipo) {
+function obtenerUsuarios($fitxer, $tipo) {
     $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $resultat = [];
 
@@ -38,7 +38,7 @@ function obtenirUsuaris($fitxer, $tipo) {
     return $resultat;
 }
 
-$clients = obtenirUsuaris($archivoUsuarios, 'cliente');
+$clients = obtenerUsuarios($archivoUsuarios, 'cliente');
 echo "<h3>Lista de Clientes</h3>";
 foreach ($clients as $cliente) {
     echo "Usuario: {$cliente['usuario']}<br>";
@@ -85,12 +85,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['accion'])) {
     file_put_contents($archivoProductos, $producto, FILE_APPEND);
     $mensaje = "Producto agregado correctamente.";
     // eliminar producto
-    }elseif($_POST['accion'] == 'eliminar' && isset($_POST['id'])) {
+    }elseif ($_POST['accion'] == 'eliminar' && isset($_POST['id'])) {
         $productos = file($archivoProductos, FILE_IGNORE_NEW_LINES);
+    
         $productosFiltrados = array_filter($productos, function ($producto) {
             list($nombre, $id, $precio, $iva, $disponible) = explode('|', $producto);
-            return $id != $_POST['id'];
+            return $id != $_POST['id']; // Excluir el producto con ese ID
         });
+    
+        // Reescribir el archivo con los productos restantes
+        file_put_contents($archivoProductos, implode("\n", $productosFiltrados) . "\n");
+        
+        // Mensaje de éxito o error
+        $mensaje = "Producto eliminado correctamente.";
     }
 
     header('Location: ' . $_SERVER['PHP_SELF']);

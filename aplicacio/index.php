@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Si no hay una sesión iniciada, redirigir a login
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit;

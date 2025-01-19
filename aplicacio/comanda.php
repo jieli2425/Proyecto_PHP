@@ -197,14 +197,21 @@ function crearComandaUsuario($usuario, $productosSeleccionats, $totals)
     file_put_contents($comandaFile, $contenido);
 }
 
-// Procesar la eliminación de una comanda
-if (isset($_POST['borrarComanda'])) {
-    $borrado = borrar($usuario);
-    if ($borrado) {
-        echo "<p>Comanda borrada correctamente.</p>";
-    } else {
-        echo "<p>No se pudo borrar la comanda. El archivo no existe.</p>";
+function borrar($usuario) {
+    $comandaFile = "../comandes/$usuario.txt"; // Ruta del archivo de la comanda
+    if (file_exists($comandaFile)) {
+        return unlink($comandaFile); // Eliminar el archivo y devolver true si tiene éxito
     }
+    return false; // Si el archivo no existe, devolver false
+}
+
+if (isset($_POST['borrarComanda'])) {
+    $usuario = $_SESSION['usuario'];
+    $borrado = borrar($usuario);
+
+    // Redirigir a la página "cistella.php" después de borrar la comanda
+    header('Location: cistella.php');
+    exit;
 }
 
 // Generar PDF si se hace clic en "Visualitzar Comanda (PDF)"

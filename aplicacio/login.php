@@ -50,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <button type="submit">Iniciar sesión</button>
 </form>
 
-<!-- Mostrar mensaje de error en caso de fallo -->
 <?php if (isset($error)) { echo '<p style="color:red;">' . $error . '</p>'; } ?>
 </body>
 </html>

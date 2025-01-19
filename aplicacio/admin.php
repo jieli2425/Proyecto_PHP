@@ -7,10 +7,10 @@ if ($_SESSION['tipo'] != 'admin') {
 }
 
 $archivoUsuarios = '../usuaris/usuaris.txt';
-$archivoMensajes = '../registro_correos.txt'; // Ruta al archivo de mensajes
+$archivoMensajes = '../registro_correos.txt';
 
 // Función para obtener usuarios según el tipo
-function obtenirUsuaris($fitxer, $tipo) {
+function obtenerUsuarios($fitxer, $tipo) {
     $usuaris = file($fitxer, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $resultat = [];
     
@@ -61,7 +61,6 @@ function mostrarMensajes($archivoMensajes) {
         foreach ($mensajes as $mensaje) {
             $datosMensaje = explode(' | ', $mensaje);
             
-            // Extraer datos específicos
             $correoEnviado = isset($datosMensaje[1]) ? explode(': ', $datosMensaje[1])[1] : 'Desconocido';
             $destinatario = isset($datosMensaje[2]) ? explode(': ', $datosMensaje[2])[1] : 'Desconocido';
             $asunto = isset($datosMensaje[3]) ? explode(': ', $datosMensaje[3])[1] : 'Sin asunto';
@@ -123,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             file_put_contents($archivoUsuarios, implode("\n", $linies) . "\n");
             echo "Dades del gestor modificades correctament.<br>";
-        }elseif ($accio === 'crear_client') {
+        }elseif ($accio === 'crear_cliente') {
             $nouClient = [
                 $_POST['usuario'],
                 $_POST['id'],
@@ -205,10 +204,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
-}
+
 
 // Mostrar datos del admin
-$admin = obtenirUsuaris($archivoUsuarios, 'admin')[0] ?? null;
+$admin = obtenerUsuarios($archivoUsuarios, 'admin')[0] ?? null;
 if ($admin) {
     echo "<h3>Administrador</h3>";
     echo "Usuario: {$admin['usuario']}<br>";
@@ -217,7 +216,7 @@ if ($admin) {
 }
 
 // Mostrar lista de gestores
-$gestors = obtenirUsuaris($archivoUsuarios, 'gestor');
+$gestors = obtenerUsuarios($archivoUsuarios, 'gestor');
 echo "<h3>Lista de Gestores</h3>";
 foreach ($gestors as $gestor) {
     echo "Usuario: {$gestor['usuario']}<br>";
@@ -230,7 +229,7 @@ foreach ($gestors as $gestor) {
 }
 
 // Mostrar lista de clientes
-$clients = obtenirUsuaris($archivoUsuarios, 'cliente');
+$clients = obtenerUsuarios($archivoUsuarios, 'cliente');
 echo "<h3>Lista de Clientes</h3>";
 foreach ($clients as $cliente) {
     echo "Usuario: {$cliente['usuario']}<br>";
@@ -267,7 +266,7 @@ mostrarMensajes($archivoMensajes);
     <button type="submit">Modificar</button>
 </form>
 
-<!-- Formulari per crear un gestor -->
+
 <h3>Crear nou gestor</h3>
 <form method="POST">
     <input type="hidden" name="accio" value="crear_gestor">
@@ -325,10 +324,10 @@ mostrarMensajes($archivoMensajes);
 <form method="GET" action="./codigosPDF/generarPDF.php">
     <button type=submit name="tipo" value="gestor">Gestores PDF</button>
 </form>
-<!-- Formulari per crear un client -->
+
 <h3>Crear nou client</h3>
 <form method="POST">
-    <input type="hidden" name="accio" value="crear_client">
+    <input type="hidden" name="accio" value="crear_cliente">
     <label for="usuario">Nom d'usuari:</label>
     <input type="text" name="usuario" required><br>
     <label for="id">Identificador numèric:</label>
