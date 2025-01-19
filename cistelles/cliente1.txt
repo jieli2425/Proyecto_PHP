@@ -1,4 +1,1 @@
-Maus|5|29.99|21|1
-Teclat mecànic|6|99.99|21|1
-Manzana|2|2|10|1
 Rellotge intel·ligent|4|159.99|21|1

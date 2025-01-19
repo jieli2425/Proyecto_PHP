@@ -1,3 +1,4 @@
 admin;admin@fjeclot.net;$2y$10$DQc1/Y8hJYmxIeYrUHdqVeyLCexZZoXnCCwQsvIpj/iY0ww0gcile;admin
 cliente1;1;$2y$10$XfadOFeqo.ViQt.T7vQRH.o.SdjhG4BOi0vfdcmyUawtEC5SzsoEe;cliente;Joan;Garcia;cliente1@botiga.com;676767676;Valencia 666;gestor2
 gestor1;1;$2y$10$Kqh1VyLkuK9ZTGgRB6O8zeArka7DeIiEUCNu6NJxhKwRYU3.A22iq;gestor;David;Garcia;gestor1@botiga.com;999999372
+gestor2;2;$2y$10$rGANNxragToANp6fEhygouwAA1yoEQxiB5/gnMoRoQECiDjIGb1fG;gestor;Jie;Li;gestor2@gmail.com;123456789
