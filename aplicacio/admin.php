@@ -80,6 +80,46 @@ function mostrarMensajes($archivoMensajes) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['accio'])) {
         $accio = $_POST['accio'];
+        if ($accio === 'esborrar_gestors_anonims') {
+            $linies = file($archivoUsuarios, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $novesLinies = array_filter($linies, function ($linia) {
+                return !preg_match('/^anonim[1-5];/', $linia);
+            });
+            
+            file_put_contents($archivoUsuarios, implode("\n", $novesLinies) . "\n");
+            echo "Gestors anònims esborrats correctament.<br>";
+        }
+        if ($accio === 'crear_gestors_anonims') {
+            $gestors = obtenerUsuarios($archivoUsuarios, 'gestor');
+            $gestorsExistents = false;
+            for ($i = 1; $i <= 5; $i++) {
+                $username = "anonim$i";
+                foreach ($gestors as $gestor) {
+                    if ($gestor['usuario'] === $username) {
+                        $gestorsExistents = true;
+                        break;
+                    }
+                }
+                if ($gestorsExistents) break;
+            }
+            if (!$gestorsExistents) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $nouGestor = [
+                        "anonim$i",
+                        500 + $i,
+                        '',
+                        'gestor', 
+                        '', 
+                        '',
+                        '',                 
+                        '',                     
+                    ];
+                    file_put_contents($archivoUsuarios, implode(';', $nouGestor) . "\n", FILE_APPEND);
+                }
+                echo "Els 5 nous gestors anònims s'han creat correctament.<br>";
+            } else {
+                echo "Els gestors anònims ja existeixen a la base de dades.<br>";
+            }
             if ($accio === 'crear_gestor') {
             $nouGestor = [
                 $_POST['usuario'],
@@ -204,6 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
+}
 
 
 // Mostrar datos del admin
@@ -266,6 +307,17 @@ mostrarMensajes($archivoMensajes);
     <button type="submit">Modificar</button>
 </form>
 
+<h3>Creació de Gestors Anònims</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="crear_gestors_anonims">
+    <button type="submit">Crear Gestors Anònims</button>
+</form>
+
+<h3>Esborrament de gestors anònims</h3>
+<form method="POST">
+    <input type="hidden" name="accio" value="esborrar_gestors_anonims">
+    <button type="submit">Esborrar gestors anònims</button>
+</form>
 
 <h3>Crear nou gestor</h3>
 <form method="POST">

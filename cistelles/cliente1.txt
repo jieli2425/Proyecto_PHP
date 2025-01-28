@@ -1,1 +1,6 @@
-Rellotge intel·ligent|4|159.99|21|1
+Auriculars|3|159.98|21|2
+Teclat mecànic|6|399.96|21|4
+Monitor|7|199.99|21|1
+Mochila|9|39.99|21|1
+Manzana|2|2|10|1
+Ratón|5|29.99|21|1

@@ -1,0 +1,4 @@
+2025-01-22 17:54:42 | Correo enviado desde: cliente1@botiga.com | Destinatario: gestor2@gmail.com  | Asunto: Petició de modificació o esborrament del compte | Mensaje: borrar
+2025-01-22 17:55:02 | Correo enviado desde: cliente1@botiga.com | Destinatario: gestor2@gmail.com  | Asunto: Petició de justificació de comanda rebutjada | Mensaje: Comanda1
+2025-01-22 17:58:02 | Correo enviado desde: gestor1@botiga.com | Destinatario: admin@fjeclot.net | Asunto: esborrament | Mensaje: borrar cliente1
+2025-01-22 18:01:11 | Correo enviado desde: gestor2@gmail.com | Destinatario: cliente1@botiga.com  | Asunto: Comanda borrada | Mensaje: Tu comanda ha sido borrada por el gestor.
